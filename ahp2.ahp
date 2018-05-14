@@ -1,0 +1,147 @@
+Version: 2.0
+
+#########################
+# Alternatives Section
+#
+
+Alternatives: &alternatives
+# Here, we list all the alternatives, together with their attributes. 
+# We can use these attributes later in the file when defining 
+# preferenceFunctions. The attributes can be quantitative or 
+# qualitative.
+  Benq ZOWIE:
+    matryca: 24
+    iluminacja: 350
+    reakcja: 1
+    cena: 1099
+  IIyama G-Master:
+    matryca: 24
+    iluminacja: 250
+    reakcja: 1
+    cena: 689
+  LG 24MP59:
+    matryca: 23
+    iluminacja: 250
+    reakcja: 1
+    cena: 599
+  Samsung C27:
+    matryca: 27
+    iluminacja: 250
+    reakcja: 4
+    cena: 849
+  Samsung S24:
+    matryca: 24
+    iluminacja: 250
+    reakcja: 1
+    cena: 499
+  Acer K222HQ:
+    matryca: 21
+    iluminacja: 200
+    reakcja: 5
+    cena: 399
+  Philips 278E8QJ:
+    matryca: 27
+    iluminacja: 250
+    reakcja: 4
+    cena: 819
+  Benq GW2270:
+    matryca: 21
+    iluminacja: 250
+    reakcja: 5
+    cena: 386
+  AOC Q3279:
+    matryca: 32
+    iluminacja: 250
+    reakcja: 5
+    cena: 799
+  LG 24MT49:
+    matryca: 23
+    iluminacja: 250
+    reakcja: 5
+    cena: 599
+
+
+#
+# End of Alternatives Section
+#####################################
+
+#####################################
+# Goal Section
+#
+
+
+Goal:
+# The goal spans a tree of criteria and the alternatives
+  name: Zakup monitora LCD
+  description: >
+    This is a classic single decision maker problem. It models
+    the situation facing by a family that wants to buy a new lcd.
+    
+  decision-makers:
+    - Ojciec: 0.4
+    - Matka: 0.6
+  preferences:
+    # preferences are typically defined pairwise
+    # 1 means: A is equal to B
+    # 9 means: A is highly preferrable to B
+    # 1/9 means: B is highly preferrable to A
+    Ojciec:
+      pairwise:
+       - [matryca, iluminacja, 3]
+       - [iluminacja, reakcja, 3]
+       - [reakcja, cena, 3]
+    Matka:
+      pairwise:
+       - [matryca, iluminacja, 2]
+       - [iluminacja, reakcja, 2]
+       - [reakcja, cena, 6]
+      
+  children: 
+    matryca: 
+      preferences:
+        # Komentarz - metoda s³uzaca do porownywania matrycy 
+        Ojciec:
+          pairwiseFunction: 
+             function(a1, a2) min(9, max(1/9, a2$matryca/a1$matryca))
+        Matka:
+          pairwiseFunction: 
+             function(a1, a2) min(9, max(1/9, a2$matryca/a1$matryca))
+       
+      children: *alternatives
+    iluminacja: 
+      preferences:
+        # Komentarz - metoda s³uzaca do porownywania   iluminacja
+        Ojciec:
+          pairwiseFunction: 
+             function(a1, a2) max(9, max(1/9, a2$iluminacja/a1$iluminacja))
+        Matka:
+          pairwiseFunction: 
+             function(a1, a2) max(9, max(1/9, a2$iluminacja/a1$iluminacja))
+        
+      children: *alternatives
+    reakcja: 
+      preferences:
+        # Komentarz - metoda s³uzaca do porownywania w parach reakcji 
+        Ojciec:
+          pairwiseFunction: 
+             function(a1, a2) max(9, max(1/9, a2$reakcja/a1$reakcja))
+        Matka:
+          pairwiseFunction: 
+             function(a1, a2) max(9, max(1/9, a2$reakcja/a1$reakcja))
+        
+      children: *alternatives
+    cena: 
+      preferences:
+        # Komentarz - metoda s³uzaca do porownywania w parach cen 
+        Ojciec:
+          pairwiseFunction: 
+             function(a1, a2) min(9, max(1/9, a2$cena/a1$cena))
+        Matka:
+          pairwiseFunction: 
+             function(a1, a2) min(9, max(1/9, a2$cena/a1$cena))
+        
+      children: *alternatives
+
+#
+# End of Goal Section
+#####################################
